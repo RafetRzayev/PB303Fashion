@@ -1,5 +1,7 @@
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using PB303Fashion.DataAccessLayer;
+using PB303Fashion.Models;
 
 namespace PB303Fashion
 {
@@ -17,6 +19,8 @@ namespace PB303Fashion
             {
                 options.IdleTimeout = TimeSpan.FromMinutes(10);
             });
+
+            Constants.CategoryImagePath = Path.Combine(builder.Environment.WebRootPath, "assets", "svg", "fashion");
 
             var app = builder.Build();
 
