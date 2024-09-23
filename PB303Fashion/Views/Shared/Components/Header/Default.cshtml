@@ -601,14 +601,14 @@
                                     <div class="onhover-dropdown header-badge">
                                         <button type="button" class="btn p-0 position-relative header-wishlist">
                                             <i data-feather="shopping-cart"></i>
-                                            <span class="position-absolute top-0 start-100 translate-middle badge">
+                                            <span class="position-absolute top-0 start-100 translate-middle badge" id="basketCount">
                                                 @Model.Count
                                                 <span class="visually-hidden">unread messages</span>
                                             </span>
                                         </button>
 
                                         <div class="onhover-div">
-                                            <ul class="cart-list">
+                                            <ul class="cart-list" id="basketItems">
                                                 @foreach (var item in Model.Basket ?? new List<BasketViewModel>())
                                                 {
                                                     <li class="product-box-contain">
@@ -633,7 +633,7 @@
                                             </ul>
 
                                             <div class="price-box">
-                                                <h4 class="theme-color fw-bold">$@Model.Sum</h4>
+                                                <h4 class="theme-color fw-bold" id="basketSum">$@Model.Sum</h4>
                                             </div>
 
                                             <div class="button-group">
