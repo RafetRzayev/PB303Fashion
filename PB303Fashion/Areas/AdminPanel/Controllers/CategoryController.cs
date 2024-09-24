@@ -15,7 +15,7 @@ namespace PB303Fashion.Areas.AdminPanel.Controllers
         public CategoryController(AppDbContext dbContext, IWebHostEnvironment webHostEnvironment)
         {
             _dbContext = dbContext;
-            _webHostEnvironment = webHostEnvironment;
+            _webHostEnvironment = webHostEnvironment;           
         }
 
         public async Task<IActionResult> Index()
@@ -86,6 +86,77 @@ namespace PB303Fashion.Areas.AdminPanel.Controllers
 
             _dbContext.Categories.Remove(category);
 
+            await _dbContext.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        public async Task<IActionResult> Update(int? id)
+        {
+            if (id == null) return NotFound();
+
+            var category = await _dbContext.Categories.FindAsync(id);
+
+            if (category == null) return NotFound();
+
+            return View(category);
+        }
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Update(Category category)
+        {
+            var existCategory = await _dbContext.Categories.FindAsync(category.Id);
+
+            if (existCategory == null) return NotFound();
+
+            if (!ModelState.IsValid)
+            {
+                return View(existCategory);
+            }
+
+            if (category.ImageFile != null)
+            {
+                if (!category.ImageFile.IsImage())
+                {
+                    ModelState.AddModelError("ImageFile", "Sekil secmelisiz");
+
+                    return View();
+                }
+
+                if (!category.ImageFile.IsAllowedSize(1))
+                {
+                    ModelState.AddModelError("ImageFile", "Sekil olcusu max 1mb olmalidir");
+
+                    return View();
+                }
+            }     
+
+            var existCategoryName = await _dbContext.Categories.AnyAsync(x => x.Name.ToLower().Equals(category.Name.ToLower()) && x.Id != existCategory.Id);
+
+            if (existCategoryName)
+            {
+                ModelState.AddModelError("Name", "Bu adda kateqoriya movcuddur");
+
+                return View(existCategory);
+            }
+
+            if (category.ImageFile != null)
+            {
+                var path = Path.Combine(Constants.CategoryImagePath, existCategory.ImageUrl!);
+
+                if (System.IO.File.Exists(path))
+                    System.IO.File.Delete(path);
+
+                var imageName = await category.ImageFile.GenerateFileAsync(Constants.CategoryImagePath);
+
+                existCategory.ImageUrl = imageName;
+            }
+
+            existCategory.Name = category.Name;
+
+            _dbContext.Categories.Update(existCategory);
             await _dbContext.SaveChangesAsync();
 
             return RedirectToAction(nameof(Index));

@@ -2,6 +2,7 @@
     HomeViewModel model = Model;
     var categories = model.Categories;
     var products = model.Products;
+    var text = "<b>Hello</b>";
 }
 
 <!-- Home Section Start -->
@@ -140,7 +141,7 @@
                     <div class="banner-details p-center-left p-4">
                         <div>
                             <h2 class="text-kaushan fw-normal theme-color">Get Ready To</h2>
-                            <h3 class="mt-2 mb-3">TAKE ON THE DAY!</h3>
+                            <h3>@Html.Raw(@text)</h3>
                             <p class="text-content banner-text">
                                 In publishing and graphic design, Lorem
                                 ipsum is a placeholder text commonly used to demonstrate.

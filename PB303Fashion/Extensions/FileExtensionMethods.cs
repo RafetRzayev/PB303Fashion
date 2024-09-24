@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using PB303Fashion.DataAccessLayer.Entities;
+using PB303Fashion.Models;
 
 namespace PB303Fashion.Extensions
 {
@@ -18,12 +19,11 @@ namespace PB303Fashion.Extensions
         public static async Task<string> GenerateFileAsync(this IFormFile file, string path)
         {
             var imageName = $"{Guid.NewGuid()}-{file.FileName}";
-            
             path = Path.Combine(path, imageName);
 
-            var fs = new FileStream(path, FileMode.Create);
-            await file.CopyToAsync(fs);
-            fs.Close();
+            using (var fs = new FileStream(path, FileMode.Create))
+                await file.CopyToAsync(fs);
+
 
             return imageName;
         }

@@ -21,6 +21,7 @@ namespace PB303Fashion
             });
 
             Constants.CategoryImagePath = Path.Combine(builder.Environment.WebRootPath, "assets", "svg", "fashion");
+            Constants.GalleryImagePath = Path.Combine(builder.Environment.WebRootPath, "assets", "images", "gallery");
 
             var app = builder.Build();
 

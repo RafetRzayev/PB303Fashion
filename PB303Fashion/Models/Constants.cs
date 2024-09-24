@@ -3,5 +3,6 @@
     public class Constants
     {
         public static string CategoryImagePath = "";
+        public static string GalleryImagePath = "";
     }
 }
