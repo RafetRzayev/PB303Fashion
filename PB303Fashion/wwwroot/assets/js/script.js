@@ -3,37 +3,37 @@ function addToBasket(id) {
         type: "POST",
         url: `/home/addtobasket/${id}`,
         success: function (response) {
-            
-            $("#basketSum").text(response.total);
             $("#basketCount").text(response.count);
+            $("#basketSum").text(response.sum);
 
-            let basketItems = $("#basketItems");
-            basketItems.empty();
+            let basketItems = $("#basketItems").empty();
 
-            for (let product of response.basketViewModels) {
+            for (let basketItem of response.basketViewModels) {
                 let li = `<li class="product-box-contain">
-                                <div class="drop-cart">
-                                    <a href="product-left-thumbnail.html" class="drop-image">
-                                        <img src="/assets/images/fashion/product/${product.imageUrl}"
-                                                class="blur-up lazyload" alt="">
-                                    </a>
+                            <div class="drop-cart">
+                                <a href="product-left-thumbnail.html" class="drop-image">
+                                    <img src="../assets/images/fashion/product/${basketItem.imageUrl}"
+                                            class="blur-up lazyload" alt="">
+                                </a>
 
-                                    <div class="drop-contain">
-                                        <a href="product-left-thumbnail.html">
-                                            <h5>${product.name}</h5>
-                                        </a>
-                                        <h6><span>${product.count} x</span> ${product.price}</h6>
-                                        <button class="close-button close_button">
-                                            <i class="fa-solid fa-xmark"></i>
-                                        </button>
-                                    </div>
+                                <div class="drop-contain">
+                                    <a href="product-left-thumbnail.html">
+                                        <h5>${basketItem.name}</h5>
+                                    </a>
+                                    <h6><span>${basketItem.count} x</span> $${basketItem.price}</h6>
+                                    <button class="close-button close_button">
+                                        <i class="fa-solid fa-xmark"></i>
+                                    </button>
                                 </div>
-                            </li>`;
+                            </div>
+                        </li>`;
+
                 basketItems.append(li);
             }
         }
     });
 }
+
 
 // 01. Image to background js
 // 02. Shop Page Grid Setting Js

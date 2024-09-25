@@ -116,7 +116,7 @@ namespace PB303Fashion.Controllers
 
             Response.Cookies.Append("basket", JsonConvert.SerializeObject(basketViewModels));
 
-            return Json(new { basketViewModels, count = basketViewModels.Sum(x => x.Count), total = basketViewModels.Sum(x => x.Price * x.Count) });
+            return Json(new { basketViewModels, Count = basketViewModels.Sum(x => x.Count), Sum = basketViewModels.Sum(y => y.Count * y.Price) });
         }
     }
 }

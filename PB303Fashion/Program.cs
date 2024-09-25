@@ -1,5 +1,7 @@
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using PB303Fashion.DataAccessLayer;
+using PB303Fashion.Models;
 
 namespace PB303Fashion
 {
@@ -18,6 +20,9 @@ namespace PB303Fashion
                 options.IdleTimeout = TimeSpan.FromMinutes(10);
             });
 
+            Constants.CategoryImagePath = Path.Combine(builder.Environment.WebRootPath, "assets", "svg", "fashion");
+            Constants.GalleryImagePath = Path.Combine(builder.Environment.WebRootPath, "assets", "images", "gallery");
+
             var app = builder.Build();
 
             app.UseHttpsRedirection();
@@ -30,6 +35,10 @@ namespace PB303Fashion
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapControllerRoute(
+                    name: "areas",
+                    pattern: "{area:exists}/{controller=Category}/{action=Index}/{id?}");
+
                 app.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
