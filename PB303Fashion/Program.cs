@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using PB303Fashion.DataAccessLayer;
+using PB303Fashion.DataAccessLayer.Entities;
 using PB303Fashion.Models;
 
 namespace PB303Fashion
@@ -20,6 +22,20 @@ namespace PB303Fashion
                 options.IdleTimeout = TimeSpan.FromMinutes(10);
             });
 
+            builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
+            {
+                options.Password.RequiredLength = 4;
+                options.Password.RequireUppercase = false;
+                options.Password.RequireLowercase = false;
+                options.Password.RequireNonAlphanumeric = false;
+
+                //options.Lockout.AllowedForNewUsers = true;
+                options.Lockout.MaxFailedAccessAttempts = 5;
+                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(10);
+
+                options.User.RequireUniqueEmail = true;
+            }).AddEntityFrameworkStores<AppDbContext>().AddDefaultTokenProviders();
+
             Constants.CategoryImagePath = Path.Combine(builder.Environment.WebRootPath, "assets", "svg", "fashion");
             Constants.GalleryImagePath = Path.Combine(builder.Environment.WebRootPath, "assets", "images", "gallery");
 
@@ -30,6 +46,8 @@ namespace PB303Fashion
             app.UseSession();
           
             app.UseRouting();
+
+            app.UseAuthentication();
 
             app.UseAuthorization();
 

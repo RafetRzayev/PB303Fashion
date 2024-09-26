@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PB303Fashion.DataAccessLayer;
 using PB303Fashion.DataAccessLayer.Entities;
@@ -25,6 +26,7 @@ namespace PB303Fashion.Areas.AdminPanel.Controllers
             return View(categories);
         }
 
+        [Authorize]
         public IActionResult Create()
         {
             return View();
