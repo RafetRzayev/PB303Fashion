@@ -62,6 +62,8 @@ namespace PB303Fashion.Controllers
                 return View();
             }
 
+            await _userManager.AddToRoleAsync(createdUser, RoleConstants.User);
+
             return RedirectToAction("index", "home");
         }
 
@@ -113,5 +115,63 @@ namespace PB303Fashion.Controllers
 
             return RedirectToAction("index", "home");
         }
+
+        public IActionResult ForgetPassword()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ForgetPassword(ForgetViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View();
+            }
+
+            var existUser = await _userManager.FindByEmailAsync(model.Email);
+
+            if (existUser == null)
+            {
+                ModelState.AddModelError("", "Bele istifadeci movcud deyil");
+                return View();
+            }
+
+            var resetToken = await _userManager.GeneratePasswordResetTokenAsync(existUser);
+
+            var resetLink = Url.Action(nameof(ResetPassword), "Account", new { model.Email, resetToken }, Request.Scheme, Request.Host.ToString());
+
+            return View(nameof(EmailView), resetLink);
+        }
+
+        public IActionResult EmailView()
+        {
+            return View();
+        }
+
+        public IActionResult ResetPassword()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ResetPassword(ResetPasswordViewModel model, string email, string resetToken)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View();
+            }
+
+            var existUser = await _userManager.FindByEmailAsync(email);
+
+            if (existUser == null) return BadRequest();
+
+            var result = await _userManager.ResetPasswordAsync(existUser, resetToken, model.Password);
+
+            return RedirectToAction(nameof(Login));
+        }
+        
     }
 }

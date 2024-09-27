@@ -26,7 +26,6 @@ namespace PB303Fashion.Areas.AdminPanel.Controllers
             return View(categories);
         }
 
-        [Authorize]
         public IActionResult Create()
         {
             return View();
